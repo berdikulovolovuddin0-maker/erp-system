@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OMOBOR ERP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      background: green;
+      color: white;
+      border: none;
+    }
+
+    .item {
+      background: #eee;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🏭 OMOBOR ERP SYSTEM</h2>
+
+<div class="box">
+  <h3>📦 Товар қўшиш</h3>
+
+  <input id="product" placeholder="Product name">
+  <input id="qty" placeholder="Quantity">
+
+  <button onclick="add()">Add</button>
+</div>
+
+<div class="box">
+  <h3>📊 Stock</h3>
+  <button onclick="load()">Refresh</button>
+  <div id="list"></div>
+</div>
+
+<script>
+  const API = "http://localhost:3000";
+
+  async function add() {
+    const product = document.getElementById("product").value;
+    const qty = document.getElementById("qty").value;
+
+    await fetch(API + "/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ product, qty })
+    });
+
+    alert("Qo‘shildi!");
+    load();
+  }
+
+  async function load() {
+    const res = await fetch(API + "/stock");
+    const data = await res.json();
+
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    data.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = item.product + " - " + item.qty;
+      list.appendChild(div);
+    });
+  }
+
+  load();
+</script>
+
+</body>
+</html>
