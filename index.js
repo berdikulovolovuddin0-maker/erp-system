@@ -1,28 +1,32 @@
 const express = require("express");
+const path = require("path");
 
 const app = express();
+
 app.use(express.json());
+app.use(express.static(__dirname));
 
 let stock = [];
 
-app.get("/", (req,res)=>{
-res.send("ERP ISHLAYAPTI 🚀");
+// Asosiy sahifa
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.post("/add",(req,res)=>{
-stock.push(req.body);
-res.json(stock);
+// Mahsulot qo'shish
+app.post("/add", (req, res) => {
+    stock.push(req.body);
+    res.json(stock);
 });
 
-app.get("/stock",(req,res)=>{
-res.json(stock);
+// Omborni ko'rish
+app.get("/stock", (req, res) => {
+    res.json(stock);
 });
 
-app.listen(3000, ()=>{
-console.log("SERVER ISHLADI");
-});
-const path = require("path");
+// Render uchun PORT
+const PORT = process.env.PORT || 3000;
 
-app.get("/", (req,res)=>{
-  res.sendFile(path.join(__dirname, "index.html"));
+app.listen(PORT, () => {
+    console.log(`SERVER ISHLADI. Port: ${PORT}`);
 });
